@@ -26,7 +26,7 @@ export const useStore = create<Store>((set) => ({
       name: "Laptop",
       category: "electronics",
       price: 999,
-      imageUrl: "/images/laptop.jpg", // Image URL for the product
+      imageUrl: "/images/1.jpg", // Image URL for the product
       description:
         "A high-performance laptop with a powerful processor, perfect for gaming and productivity.",
     },

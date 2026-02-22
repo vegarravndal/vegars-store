@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const PopularCategories = () => {
   const categories = [
-    { id: "electronics", name: "Electronics", imageUrl: "/images/laptop.jpg" },
+    { id: "electronics", name: "Electronics", imageUrl: "/images/1.jpg" },
     { id: "clothing", name: "Clothing", imageUrl: "/images/2.jpg" },
     { id: "home", name: "Home", imageUrl: "/images/3.jpg" },
   ];
