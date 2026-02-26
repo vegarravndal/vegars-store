@@ -81,7 +81,7 @@ export function Footer() {
 
       {/* Footer Bottom Section */}
       <div className="text-center mt-8 text-gray-400 text-sm">
-        <p>&copy; 2025 VEGAR'S STORE</p>
+        <p>&copy; 2025 VEGARS BUTIKK</p>
       </div>
     </footer>
   );
