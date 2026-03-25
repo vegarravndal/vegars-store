@@ -23,7 +23,7 @@ const Navbar = ({ cart, openCart }: NavbarProps) => {
   // 👉 Clerk user
   const { user } = useUser();
 
-  // 👉 Tving refresh av user-data
+  // 👉 (valgfri – kan beholdes for safety)
   useEffect(() => {
     user?.reload();
   }, [user]);
@@ -33,12 +33,10 @@ const Navbar = ({ cart, openCart }: NavbarProps) => {
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
-  // Lukk mobilmeny ved navigasjon
   useEffect(() => {
     closeMobileMenu();
   }, [location.pathname]);
 
-  // Lukk mobilmeny ved klikk utenfor overlay
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (
@@ -56,13 +54,13 @@ const Navbar = ({ cart, openCart }: NavbarProps) => {
   return (
     <nav className="bg-white shadow-md relative z-50">
       <div className="max-w-6xl mx-auto flex justify-between items-center p-4 text-gray-950">
+        
         {/* Logo + Desktop */}
         <div className="flex items-center space-x-6">
           <Link to="/" className="flex items-center">
             <img src="/images/logo.jpg" alt="Logo" className="h-20 w-auto" />
           </Link>
 
-          {/* Desktop meny */}
           <div className="hidden md:flex space-x-6">
             <Link to="/" className="hover:underline">Home</Link>
             <Link to="/shop" className="hover:underline">Shop</Link>
@@ -95,9 +93,10 @@ const Navbar = ({ cart, openCart }: NavbarProps) => {
             </SignInButton>
           </SignedOut>
 
+          {/* ✅ HER ER FIXEN */}
           <SignedIn>
-            <UserButton />
-          </SignedIn>
+  <UserButton key={user?.updatedAt?.toISOString()} />
+</SignedIn>
         </div>
 
         {/* Mobile hamburger */}
@@ -119,31 +118,27 @@ const Navbar = ({ cart, openCart }: NavbarProps) => {
         </div>
       </div>
 
-      {/* Mobile meny overlay */}
+      {/* Mobile meny */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 bg-black/30 z-40 flex justify-end">
           <div
             ref={menuRef}
             className="bg-white w-64 h-full p-6 relative flex flex-col"
           >
-            {/* X-knapp */}
             <button
               onClick={closeMobileMenu}
               className="absolute top-4 right-4 text-gray-900"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              ✕
             </button>
 
-            {/* Menylenker */}
             <div className="flex flex-col space-y-4 mt-12 text-center">
-              <Link to="/" onClick={closeMobileMenu} className="hover:underline">Home</Link>
-              <Link to="/shop" onClick={closeMobileMenu} className="hover:underline">Shop</Link>
-              <Link to="/about" onClick={closeMobileMenu} className="hover:underline">About</Link>
-              <Link to="/privacy-policy" onClick={closeMobileMenu} className="hover:underline">Privacy Policy</Link>
-              <Link to="/terms-and-conditions" onClick={closeMobileMenu} className="hover:underline">Terms & Conditions</Link>
-              <Link to="/contact" onClick={closeMobileMenu} className="hover:underline">Contact</Link>
+              <Link to="/" onClick={closeMobileMenu}>Home</Link>
+              <Link to="/shop" onClick={closeMobileMenu}>Shop</Link>
+              <Link to="/about" onClick={closeMobileMenu}>About</Link>
+              <Link to="/privacy-policy" onClick={closeMobileMenu}>Privacy Policy</Link>
+              <Link to="/terms-and-conditions" onClick={closeMobileMenu}>Terms</Link>
+              <Link to="/contact" onClick={closeMobileMenu}>Contact</Link>
             </div>
           </div>
         </div>
