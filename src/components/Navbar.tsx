@@ -7,6 +7,7 @@ import {
   SignedOut,
   SignInButton,
   UserButton,
+  useUser,
 } from "@clerk/clerk-react";
 
 type NavbarProps = {
@@ -18,6 +19,14 @@ const Navbar = ({ cart, openCart }: NavbarProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const location = useLocation();
+
+  // 👉 Clerk user
+  const { user } = useUser();
+
+  // 👉 Tving refresh av user-data
+  useEffect(() => {
+    user?.reload();
+  }, [user]);
 
   const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0);
 
@@ -85,6 +94,7 @@ const Navbar = ({ cart, openCart }: NavbarProps) => {
               </button>
             </SignInButton>
           </SignedOut>
+
           <SignedIn>
             <UserButton />
           </SignedIn>
