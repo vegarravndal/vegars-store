@@ -2,13 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { CartItem } from "../types/types";
 import { useState, useRef, useEffect } from "react";
 import { BsCart3 } from "react-icons/bs";
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  UserButton,
-  useUser,
-} from "@clerk/clerk-react";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 
 type NavbarProps = {
   cart: CartItem[];
@@ -20,16 +14,9 @@ const Navbar = ({ cart, openCart }: NavbarProps) => {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const location = useLocation();
 
-  // 👉 Clerk user
-  const { user } = useUser();
-
-  // 👉 (valgfri – kan beholdes for safety)
-  useEffect(() => {
-    user?.reload();
-  }, [user]);
-
   const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0);
 
+  // Bruk toggleMobileMenu i stedet for direkte setState
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
@@ -39,11 +26,7 @@ const Navbar = ({ cart, openCart }: NavbarProps) => {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (
-        isMobileMenuOpen &&
-        menuRef.current &&
-        !menuRef.current.contains(e.target as Node)
-      ) {
+      if (isMobileMenuOpen && menuRef.current && !menuRef.current.contains(e.target as Node)) {
         closeMobileMenu();
       }
     };
@@ -54,7 +37,6 @@ const Navbar = ({ cart, openCart }: NavbarProps) => {
   return (
     <nav className="bg-white shadow-md relative z-50">
       <div className="max-w-6xl mx-auto flex justify-between items-center p-4 text-gray-950">
-        
         {/* Logo + Desktop */}
         <div className="flex items-center space-x-6">
           <Link to="/" className="flex items-center">
@@ -73,10 +55,7 @@ const Navbar = ({ cart, openCart }: NavbarProps) => {
 
         {/* Cart + Auth */}
         <div className="flex items-center space-x-4 relative">
-          <button
-            onClick={openCart}
-            className="hover:text-blue-500 flex items-center relative focus:outline-none"
-          >
+          <button onClick={openCart} className="hover:text-blue-500 flex items-center relative focus:outline-none">
             <BsCart3 className="text-gray-950 text-3xl hover:text-blue-500" />
             {totalQuantity > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
@@ -85,26 +64,24 @@ const Navbar = ({ cart, openCart }: NavbarProps) => {
             )}
           </button>
 
+          {/* Bruk SignInButton uten redirectUrl */}
           <SignedOut>
-            <SignInButton>
+            <SignInButton mode="redirect">
               <button className="px-4 py-2 border border-blue-500 text-blue-500 rounded-4xl hover:bg-blue-500 hover:text-white transition">
                 Logg inn
               </button>
             </SignInButton>
           </SignedOut>
 
-          {/* ✅ HER ER FIXEN */}
+          {/* Innlogget bruker */}
           <SignedIn>
-  <UserButton key={user?.updatedAt?.toISOString()} />
-</SignedIn>
+            <UserButton afterSignOutUrl="/" />
+          </SignedIn>
         </div>
 
         {/* Mobile hamburger */}
         <div className="md:hidden flex items-center">
-          <button
-            onClick={toggleMobileMenu}
-            className="text-gray-950 focus:outline-none"
-          >
+          <button onClick={toggleMobileMenu} className="text-gray-950 focus:outline-none">
             {isMobileMenuOpen ? (
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -118,20 +95,11 @@ const Navbar = ({ cart, openCart }: NavbarProps) => {
         </div>
       </div>
 
-      {/* Mobile meny */}
+      {/* Mobile menu */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 bg-black/30 z-40 flex justify-end">
-          <div
-            ref={menuRef}
-            className="bg-white w-64 h-full p-6 relative flex flex-col"
-          >
-            <button
-              onClick={closeMobileMenu}
-              className="absolute top-4 right-4 text-gray-900"
-            >
-              ✕
-            </button>
-
+          <div ref={menuRef} className="bg-white w-64 h-full p-6 relative flex flex-col">
+            <button onClick={closeMobileMenu} className="absolute top-4 right-4 text-gray-900">✕</button>
             <div className="flex flex-col space-y-4 mt-12 text-center">
               <Link to="/" onClick={closeMobileMenu}>Home</Link>
               <Link to="/shop" onClick={closeMobileMenu}>Shop</Link>
